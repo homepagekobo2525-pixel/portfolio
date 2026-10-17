@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOKA ボタニカルシャンプー|香りで、髪をほどく。</title>
+<meta name="description" content="野の草花から生まれたボタニカルヘアケア「NOKA」。ラベンダーとシトラス、ふたつの香りのシャンプー。(制作サンプル・架空のブランドです)">
+<script>
+  document.documentElement.classList.add('js');
+  // no WebGL after a while: show the drawn bottle instead
+  setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('gl'))h.classList.add('no-gl');},8000);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<style>
+  :root{
+    --linen:#F3F1E7;
+    --card:#FBFAF5;
+    --ink:#2F3A2B;
+    --ink-soft:#5F5B50;
+    --sage:#6B7856;
+    --sage-deep:#4E5D45;
+    --wood:#A8916B;
+    --line:rgba(47,58,43,.14);
+    /* scent: tweened by the switch */
+    --bg-a:#F5F2F3;
+    --bg-b:#D9D0DF;
+    --accent:#6E5F88;
+    --bottle:#B7A8C9;
+    --en:'Cormorant Garamond',serif;
+    --mincho:'Shippori Mincho',serif;
+    --gothic:'Zen Kaku Gothic New',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{background:var(--linen);color:var(--ink);font-family:var(--gothic);font-size:16px;line-height:1.9;letter-spacing:.03em;overflow-x:hidden;}
+  a{color:inherit;}
+  img,svg,canvas{display:block;}
+  button{font:inherit;color:inherit;}
+  :focus-visible{outline:2px solid var(--sage-deep);outline-offset:3px;}
+  em{font-style:normal;}
+
+  /* ---------- header ---------- */
+  .hd{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem max(20px,4vw);transition:background .4s,box-shadow .4s;}
+  .hd.solid{background:rgba(243,241,231,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line);}
+  .logo{display:flex;align-items:baseline;gap:.7rem;text-decoration:none;}
+  .logo b{font-family:var(--en);font-weight:500;font-size:1.7rem;letter-spacing:.24em;}
+  .logo small{font-size:.72rem;color:var(--ink-soft);letter-spacing:.12em;}
+  .hd-nav{display:flex;gap:.3rem;padding:.3rem;border-radius:999px;background:rgba(251,250,245,.5);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+  .hd-nav a{text-decoration:none;font-size:.86rem;padding:.45rem 1.05rem;border-radius:999px;transition:background .3s,color .3s;}
+  .hd-nav a:hover{background:var(--ink);color:var(--card);}
+  .hd-cta{text-decoration:none;font-size:.86rem;font-weight:500;padding:.7rem 1.4rem;border-radius:999px;background:var(--ink);color:var(--card);transition:transform .3s,background .3s;}
+  .hd-cta:hover{background:var(--sage-deep);transform:translateY(-2px);}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden;touch-action:pan-y;
+    background:radial-gradient(ellipse 62% 78% at 50% 54%,var(--bg-a) 0%,var(--bg-b) 100%);}
+  #gl,#bubbles{position:absolute;inset:0;width:100%;height:100%;}
+  #gl{z-index:1;opacity:0;transition:opacity 1.2s ease;}
+  .gl #gl{opacity:1;}
+  #bubbles{z-index:2;pointer-events:none;}
+  .fallback{display:none;position:absolute;z-index:1;left:50%;top:54%;height:62%;width:auto;transform:translate(-50%,-50%) rotate(-4deg);}
+  html:not(.js) .fallback,.no-gl .fallback{display:block;}
+  .no-gl #gl{display:none;}
+  .hero-copy{position:absolute;z-index:3;left:max(24px,6vw);top:52%;transform:translateY(-50%);width:min(30rem,32vw);}
+  .eyebrow{font-family:var(--en);font-style:italic;font-size:1.25rem;color:var(--accent);letter-spacing:.06em;}
+  .hero h1{font-family:var(--mincho);font-weight:600;font-size:clamp(2.6rem,4.4vw,4.6rem);line-height:1.3;letter-spacing:.05em;margin-top:.6rem;}
+  .lead{font-size:1.02rem;line-height:2.05;margin-top:1.5rem;max-width:23em;}
+  .acts{display:flex;align-items:center;gap:1.6rem;margin-top:2.2rem;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:.8rem;text-decoration:none;font-weight:500;padding:.95rem 1.7rem;border-radius:999px;background:var(--ink);color:var(--card);transition:transform .3s,background .3s;border:0;cursor:pointer;}
+  .btn::after{content:"";width:7px;height:7px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:rotate(45deg);}
+  .btn:hover{background:var(--sage-deep);transform:translateY(-2px);}
+  .btn:active,.scent-btns button:active{transform:scale(.98);}
+  .link{font-size:.95rem;text-underline-offset:.4em;text-decoration-color:var(--wood);}
+  .link:hover{color:var(--sage-deep);}
+
+  .scent{position:absolute;z-index:3;right:max(24px,5vw);top:52%;transform:translateY(-50%);width:15.5rem;}
+  .scent-lbl{font-size:.82rem;color:var(--ink-soft);letter-spacing:.14em;margin-bottom:.8rem;}
+  .scent-lbl em{font-family:var(--en);font-style:italic;font-size:1.15rem;color:var(--accent);margin-right:.5rem;letter-spacing:.04em;}
+  .scent-btns{display:flex;flex-direction:column;gap:.7rem;}
+  .scent-btns button{display:flex;align-items:center;gap:.9rem;width:100%;text-align:left;cursor:pointer;padding:.8rem 1.1rem;border:0;border-radius:999px;
+    background:rgba(251,250,245,.5);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .3s,background .3s,box-shadow .3s;}
+  .scent-btns button:hover{transform:translateX(-4px);background:rgba(251,250,245,.8);}
+  .scent-btns button[aria-pressed="true"]{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--accent),0 10px 30px rgba(47,58,43,.08);}
+  .scent-btns i{width:24px;height:24px;border-radius:50%;flex:none;background:var(--c);box-shadow:inset 0 -3px 6px rgba(0,0,0,.12),0 0 0 4px rgba(255,255,255,.6);}
+  .scent-btns span{font-family:var(--mincho);font-weight:600;font-size:1.05rem;line-height:1.3;}
+  .scent-btns small{display:block;font-family:var(--en);font-style:italic;font-weight:400;font-size:.95rem;color:var(--ink-soft);}
+  .scent-note{margin-top:1.1rem;font-family:var(--mincho);font-size:.98rem;line-height:1.9;color:var(--ink);}
+  .scroll{position:absolute;z-index:3;left:50%;bottom:1.6rem;transform:translateX(-50%);font-family:var(--en);font-style:italic;font-size:1rem;text-decoration:none;color:var(--ink-soft);display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+  .scroll::after{content:"";width:1px;height:38px;background:linear-gradient(var(--ink-soft),transparent);animation:drip 2.2s ease-in-out infinite;transform-origin:top;}
+  @keyframes drip{0%{transform:scaleY(0);}50%{transform:scaleY(1);}100%{transform:scaleY(1);opacity:0;}}
+
+  /* ---------- sections ---------- */
+  .wrap{width:min(72rem,100% - 40px);margin:0 auto;}
+  section.sec{padding:clamp(5rem,11vw,9rem) 0;}
+  .en-h{font-family:var(--en);font-style:italic;font-size:1.3rem;color:var(--sage);letter-spacing:.05em;}
+  h2{font-family:var(--mincho);font-weight:600;font-size:clamp(1.9rem,3.4vw,2.9rem);line-height:1.45;letter-spacing:.05em;margin-top:.5rem;}
+
+  .about-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(2rem,6vw,6rem);align-items:start;}
+  .about-grid p{font-size:1.05rem;line-height:2.1;}
+  .points{list-style:none;margin-top:2.6rem;border-top:1px solid var(--line);}
+  .points li{display:grid;grid-template-columns:3rem 1fr;gap:0 1rem;padding:1.4rem 0;border-bottom:1px solid var(--line);}
+  .points li::before{content:attr(data-n);grid-row:span 2;font-family:var(--en);font-size:1.6rem;color:var(--wood);line-height:1.2;}
+  .points b,.points span{grid-column:2;}
+  .points b{display:block;font-family:var(--mincho);font-weight:600;font-size:1.15rem;}
+  .points span{display:block;color:var(--ink-soft);margin-top:.3rem;}
+
+  .scents{background:var(--card);}
+  .scents-head{display:flex;justify-content:space-between;align-items:end;gap:2rem;flex-wrap:wrap;}
+  .scents-head p{max-width:26em;color:var(--ink-soft);}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:3rem;}
+  .panel{border-radius:28px;padding:clamp(1.8rem,4vw,3rem);background:var(--p-bg);display:flex;flex-direction:column;}
+  .panel.lav{--p-bg:#ECE7F0;--p-ac:#6E5F88;}
+  .panel.cit{--p-bg:#F4EDD6;--p-ac:#87681D;}
+  .panel .en-h{color:var(--p-ac);font-size:1.6rem;}
+  .panel h3{font-family:var(--mincho);font-weight:600;font-size:1.7rem;letter-spacing:.06em;}
+  .panel .catch{font-family:var(--mincho);font-size:1.1rem;margin-top:1rem;}
+  .notes{margin-top:1.8rem;border-top:1px solid rgba(47,58,43,.16);}
+  .notes div{display:grid;grid-template-columns:5.5rem 1fr;padding:.85rem 0;border-bottom:1px solid rgba(47,58,43,.16);}
+  .notes dt{font-family:var(--en);font-style:italic;font-size:1.05rem;color:var(--p-ac);}
+  .panel .btn{margin-top:2rem;align-self:flex-start;}
+
+  .steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.5rem,4vw,3.5rem);margin-top:3rem;counter-reset:s;}
+  .steps li{counter-increment:s;border-top:1px solid var(--ink);padding-top:1.4rem;}
+  .steps li::before{content:"0" counter(s);display:block;font-family:var(--en);font-size:3.4rem;line-height:1;color:var(--sage);}
+  .steps b{display:block;font-family:var(--mincho);font-weight:600;font-size:1.25rem;margin-top:.9rem;}
+  .steps p{color:var(--ink-soft);margin-top:.4rem;}
+
+  .item{background:var(--ink);color:var(--linen);}
+  .item .en-h{color:#C9C3A5;}
+  .item-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(2rem,6vw,6rem);}
+  .item-grid > div > p{color:rgba(243,241,231,.78);margin-top:1.2rem;}
+  .lineup{list-style:none;border-top:1px solid rgba(243,241,231,.2);}
+  .lineup li{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:1.3rem 0;border-bottom:1px solid rgba(243,241,231,.2);}
+  .lineup b{font-family:var(--mincho);font-weight:500;font-size:1.15rem;}
+  .lineup small{display:block;font-size:.85rem;color:rgba(243,241,231,.65);}
+  .lineup span{font-family:var(--en);font-size:1.5rem;white-space:nowrap;}
+  .tax{font-size:.85rem;color:rgba(243,241,231,.65);margin-top:1rem;}
+  .item .btn{background:var(--linen);color:var(--ink);margin-top:2.2rem;}
+  .item .btn:hover{background:#fff;}
+
+  .ft{padding:2.6rem 0 3rem;font-size:.86rem;color:var(--ink-soft);}
+  .ft .wrap{display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;}
+  .ft b{font-family:var(--en);font-weight:500;font-size:1.3rem;letter-spacing:.24em;color:var(--ink);}
+
+  /* ---------- tablets and phones: copy on top, bottle in the middle, scent switch at the bottom ---------- */
+  @media (max-width:1100px){
+    .hd-nav{display:none;}
+    .hero-copy{top:6.4rem;transform:none;left:max(20px,5vw);right:max(20px,5vw);width:auto;max-width:36rem;}
+    .scent{top:auto;bottom:max(16px,2.5vh);transform:none;left:max(16px,5vw);right:max(16px,5vw);width:auto;max-width:32rem;margin:0 auto;}
+    .scent-lbl,.scent-note,.scroll{display:none;}
+    .scent-btns{flex-direction:row;}
+    .scent-btns button{flex:1;padding:.7rem .9rem;}
+    .scent-btns button:hover{transform:none;}
+    .fallback{top:60%;height:44%;}
+  }
+  @media (max-width:760px){
+    .logo small{display:none;}
+    .hd-cta{padding:.6rem 1.1rem;font-size:.8rem;}
+    .hero{min-height:600px;}
+    .hero-copy{top:5.4rem;}
+    .eyebrow{font-size:1.05rem;}
+    .hero h1{font-size:2.3rem;margin-top:.3rem;}
+    .lead{font-size:.92rem;line-height:1.85;margin-top:.8rem;}
+    .acts{display:none;}
+    .scent-btns{gap:.5rem;}
+    .scent-btns i{width:20px;height:20px;}
+    .scent-btns span{font-size:.95rem;}
+    .scent-btns small{font-size:.82rem;}
+    .about-grid,.item-grid,.panels,.steps{grid-template-columns:1fr;}
+    .steps{gap:2rem;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{transition:none !important;animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hd" id="hd">
+  <a class="logo" href="#top"><b>NOKA</b><small>ボタニカルヘアケア</small></a>
+  <nav class="hd-nav" aria-label="ページ内">
+    <a href="#about">ブランド</a><a href="#scents">香り</a><a href="#use">使い方</a><a href="#item">商品</a>
+  </nav>
+  <a class="hd-cta" href="#item">商品を見る</a>
+</header>
+
+<main>
+  <section class="hero" id="top" aria-label="NOKA ボタニカルシャンプー">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <!-- shown when WebGL is not available -->
+    <svg class="fallback" viewBox="0 0 200 420" aria-hidden="true">
+      <rect x="62" y="22" width="78" height="14" rx="5" fill="#3B4636"/>
+      <rect x="128" y="25" width="42" height="9" rx="4" fill="#3B4636"/>
+      <rect x="92" y="34" width="16" height="26" fill="#3B4636"/>
+      <rect x="74" y="58" width="52" height="20" rx="6" fill="#3B4636"/>
+      <path d="M58 92 Q100 70 142 92 L150 110 Q154 118 154 132 L154 388 Q154 404 138 404 L62 404 Q46 404 46 388 L46 132 Q46 118 50 110 Z" style="fill:var(--bottle)"/>
+      <rect x="54" y="190" width="92" height="130" rx="4" fill="#F6F2E8"/>
+      <text x="100" y="262" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="30" letter-spacing="5" fill="#2F3A2B">NOKA</text>
+      <text x="100" y="290" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="9" letter-spacing="2" fill="#4E5D45">BOTANICAL SHAMPOO</text>
+    </svg>
+    <canvas id="bubbles" aria-hidden="true"></canvas>
+
+    <div class="hero-copy">
+      <p class="eyebrow">Botanical Hair Care</p>
+      <h1>香りで、<br>髪をほどく。</h1>
+      <p class="lead">野の草花から生まれた、ボタニカルシャンプー。洗うたびに広がるやわらかな香りが、一日の終わりをほどいていきます。</p>
+      <div class="acts">
+        <a class="btn" href="#scents">香りを詳しく見る</a>
+        <a class="link" href="#about">ブランドについて</a>
+      </div>
+    </div>
+
+    <div class="scent" role="group" aria-labelledby="scentLbl">
+      <p class="scent-lbl" id="scentLbl"><em>Scent</em>香りを選ぶ</p>
+      <div class="scent-btns">
+        <button type="button" data-scent="lavender" aria-pressed="true"><i style="--c:#9C86B8"></i><span>ラベンダー<small>Lavender</small></span></button>
+        <button type="button" data-scent="citrus" aria-pressed="false"><i style="--c:#E2B94E"></i><span>シトラス<small>Citrus</small></span></button>
+      </div>
+      <p class="scent-note" id="scentNote" aria-live="polite">眠る前の、静かな草原の香り。</p>
+    </div>
+    <a class="scroll" href="#about">Scroll</a>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="wrap about-grid">
+      <div class="rv">
+        <p class="en-h">Our story</p>
+        <h2>野の香りを、<br>毎日の髪に。</h2>
+      </div>
+      <div class="rv">
+        <p>NOKA(ノカ)は「野の香(か)」から名づけた、ボタニカルヘアケアのブランドです。夕方の草原や、朝摘みの果実。季節の植物がもつ香りを、そのままバスルームへ持ち込むことを考えて作りました。</p>
+        <ul class="points">
+          <li data-n="01"><b>植物由来の洗浄成分</b><span>アミノ酸系の洗浄成分で、頭皮のうるおいを残しながら洗い上げます。</span></li>
+          <li data-n="02"><b>シリコン・合成着色料を使わない</b><span>髪の手ざわりは、ホホバ油とシアバターで整えます。</span></li>
+          <li data-n="03"><b>詰め替えは紙パック</b><span>ボトルは繰り返し使える設計。詰め替えにはプラスチックを減らした紙パックを使います。</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec scents" id="scents">
+    <div class="wrap">
+      <div class="scents-head rv">
+        <div>
+          <p class="en-h">Two scents</p>
+          <h2>ふたつの香り</h2>
+        </div>
+        <p>夜にゆるむ香りと、朝に目覚める香り。精油をブレンドした、それぞれの香りの移り変わりです。</p>
+      </div>
+      <div class="panels">
+        <article class="panel lav rv">
+          <p class="en-h">Lavender</p>
+          <h3>ラベンダー</h3>
+          <p class="catch">眠る前の、静かな草原の香り。</p>
+          <dl class="notes">
+            <div><dt>Top</dt><dd>ベルガモット</dd></div>
+            <div><dt>Middle</dt><dd>ラベンダー、クラリセージ</dd></div>
+            <div><dt>Last</dt><dd>シダーウッド</dd></div>
+          </dl>
+          <button class="btn" type="button" data-pick="lavender">この香りのボトルを見る</button>
+        </article>
+        <article class="panel cit rv">
+          <p class="en-h">Citrus</p>
+          <h3>シトラス</h3>
+          <p class="catch">朝の窓をあける、果皮の香り。</p>
+          <dl class="notes">
+            <div><dt>Top</dt><dd>ゆず、グレープフルーツ</dd></div>
+            <div><dt>Middle</dt><dd>ローズマリー</dd></div>
+            <div><dt>Last</dt><dd>ベチバー</dd></div>
+          </dl>
+          <button class="btn" type="button" data-pick="citrus">この香りのボトルを見る</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="use">
+    <div class="wrap">
+      <div class="rv">
+        <p class="en-h">How to use</p>
+        <h2>香りを残す、洗い方</h2>
+      </div>
+      <ol class="steps">
+        <li class="rv"><b>しっかり予洗い</b><p>ぬるま湯で1分ほど、髪と頭皮を十分に濡らします。汚れの多くはここで落ちます。</p></li>
+        <li class="rv"><b>手のひらで泡立てる</b><p>1〜2プッシュを手のひらで泡立て、指の腹で頭皮をやさしく洗います。</p></li>
+        <li class="rv"><b>ていねいにすすぐ</b><p>泡が残らないようにすすぎます。乾かしたあとも、香りがほのかに続きます。</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec item" id="item">
+    <div class="wrap item-grid">
+      <div class="rv">
+        <p class="en-h">Line up</p>
+        <h2>ラインナップ</h2>
+        <p>どの商品も、ラベンダーとシトラスの2種類の香りからお選びいただけます。</p>
+        <a class="btn" href="#top">香りを選び直す</a>
+      </div>
+      <div class="rv">
+        <ul class="lineup">
+          <li><b>ボタニカルシャンプー<small>400mL</small></b><span>¥3,520</span></li>
+          <li><b>ボタニカルトリートメント<small>400g</small></b><span>¥3,520</span></li>
+          <li><b>シャンプー 詰め替え用<small>340mL・紙パック</small></b><span>¥2,860</span></li>
+          <li><b>トラベルセット<small>シャンプー・トリートメント 各40mL</small></b><span>¥1,320</span></li>
+        </ul>
+        <p class="tax">価格はすべて税込です。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <b>NOKA</b>
+    <p>このページは、ほーむぺーじこうぼうの制作サンプルです。NOKAは架空のブランドで、商品・成分・価格はすべて仮のものです。<br><a href="../">← 作品一覧へ戻る</a></p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+  const html = document.documentElement, hero = document.getElementById('top');
+  const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowEnd = (navigator.hardwareConcurrency || 8) <= 4;
+  const SCENTS = {
+    lavender:{note:'眠る前の、静かな草原の香り。',body:'#B7A8C9',bgA:'#F5F2F3',bgB:'#D9D0DF',accent:'#6E5F88',
+      petal:['#9C86B8','#B3A1CB','#8673A6','#C7B9DA'],leaf:['#8E9C82','#7B8B6E','#A3AE95'],kind:'lav',label:'Lavender'},
+    citrus:{note:'朝の窓をあける、果皮の香り。',body:'#E2C46F',bgA:'#F8F3E3',bgB:'#E6DDB6',accent:'#87681D',
+      petal:['#F7F0DC','#F2E2B2','#E8B847','#F0CF73'],leaf:['#6F8A4E','#5E7745','#88A060'],kind:'cit',label:'Citrus'}
+  };
+  // shared with the 3D module
+  const ptr = {px:-1e4, py:-1e4, on:false, nx:0, ny:0};
+  window.NOKA = {SCENTS, ptr, REDUCE, lowEnd, scent:'lavender'};
+
+  // ---------- pointer / finger over the hero ----------
+  const setP = e => {
+    const r = hero.getBoundingClientRect();
+    ptr.px = e.clientX - r.left; ptr.py = e.clientY - r.top; ptr.on = true;
+    ptr.nx = (ptr.px / r.width - .5) * 2; ptr.ny = (ptr.py / r.height - .5) * 2;
+  };
+  const off = () => { ptr.on = false; ptr.nx = 0; ptr.ny = 0; };
+  hero.addEventListener('pointermove', setP, {passive:true});
+  hero.addEventListener('pointerdown', setP, {passive:true});
+  hero.addEventListener('pointerleave', off);
+  hero.addEventListener('pointercancel', off);
+  hero.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') off(); });
+
+  // ---------- scent switch ----------
+  const btns = [...document.querySelectorAll('.scent-btns button')], note = document.getElementById('scentNote');
+  let busy = false;
+  function setScent(name){
+    if (busy || name === NOKA.scent) return;
+    NOKA.scent = name;
+    const S = SCENTS[name];
+    btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.scent === name));
+    note.textContent = S.note;
+    const vars = {'--bg-a':S.bgA, '--bg-b':S.bgB, '--accent':S.accent, '--bottle':S.body};
+    if (REDUCE || !window.gsap) Object.entries(vars).forEach(([k, v]) => html.style.setProperty(k, v));
+    else {
+      busy = true;
+      gsap.to(html, {...vars, duration:1.4, ease:'power2.inOut'});
+      setTimeout(() => { busy = false; }, 2100);
+    }
+    document.dispatchEvent(new CustomEvent('noka:scent', {detail:name}));
+  }
+  btns.forEach(b => b.addEventListener('click', () => setScent(b.dataset.scent)));
+  // the scent panels take the reader back up to the bottle, then switch
+  document.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => {
+    hero.scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth'});
+    setTimeout(() => setScent(b.dataset.pick), REDUCE ? 0 : 650);
+  }));
+
+  // ---------- soap bubbles (2D canvas, no images) ----------
+  const bc = document.getElementById('bubbles'), bx = bc.getContext('2d');
+  let BW = 0, BH = 0, bubs = [], heroOn = true, bRun = false, bLast = 0;
+  const BN = Math.round((innerWidth <= 760 ? 22 : 44) * (lowEnd ? .6 : 1));
+  function bsize(){
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    BW = hero.clientWidth; BH = hero.clientHeight;
+    bc.width = BW * dpr; bc.height = BH * dpr; bx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function spawn(b, init){
+    const s = innerWidth <= 760;
+    b.r = (s ? 3 : 4) + Math.pow(Math.random(), 2.2) * (s ? 13 : 20);
+    b.x = Math.random() * BW;
+    b.y = init ? Math.random() * BH : BH + b.r + Math.random() * 60;
+    b.v = 16 + Math.random() * 28 + b.r * 1.2;
+    b.wa = 4 + Math.random() * 14; b.wf = .5 + Math.random() * 1.1; b.ph = Math.random() * 6.28; b.h = Math.random() * 360;
+    return b;
+  }
+  function drawBubble(b, t){
+    const x = b.x + Math.sin(t * b.wf + b.ph) * b.wa, y = b.y, r = b.r;
+    const g = bx.createRadialGradient(x - r * .3, y - r * .35, r * .1, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,.04)'); g.addColorStop(.72, 'rgba(255,255,255,.12)'); g.addColorStop(1, 'rgba(255,255,255,.6)');
+    bx.fillStyle = g; bx.beginPath(); bx.arc(x, y, r, 0, 6.2832); bx.fill();
+    bx.lineWidth = 1;
+    // a soap film shimmers: one side of the rim drifts through the hues
+    bx.strokeStyle = `hsla(${(b.h + t * 40) % 360},60%,60%,.35)`; bx.beginPath(); bx.arc(x, y, r - .5, -.5, 2.3); bx.stroke();
+    bx.strokeStyle = 'rgba(47,58,43,.12)'; bx.beginPath(); bx.arc(x, y, r - .5, 2.3, 5.78); bx.stroke();
+    bx.fillStyle = 'rgba(255,255,255,.85)'; bx.beginPath(); bx.ellipse(x - r * .4, y - r * .42, r * .26, r * .13, -.7, 0, 6.2832); bx.fill();
+  }
+  function bFrame(now){
+    if (!heroOn || document.hidden) { bRun = false; return; }
+    const dt = Math.min(.05, (now - bLast) / 1000), t = now / 1000; bLast = now;
+    bx.clearRect(0, 0, BW, BH);
+    for (const b of bubs) { b.y -= b.v * dt; if (b.y < -b.r - 10) spawn(b, false); drawBubble(b, t); }
+    requestAnimationFrame(bFrame);
+  }
+  function bStill(){ bx.clearRect(0, 0, BW, BH); bubs.forEach(b => drawBubble(b, 0)); }
+  function bStart(){ if (REDUCE) { bStill(); return; } if (!bRun && heroOn) { bRun = true; bLast = performance.now(); requestAnimationFrame(bFrame); } }
+  bsize();
+  for (let i = 0; i < BN; i++) bubs.push(spawn({}, true));
+  addEventListener('resize', () => { bsize(); bubs.forEach(b => { if (b.x > BW) b.x = Math.random() * BW; }); if (REDUCE) bStill(); });
+  new IntersectionObserver(es => { heroOn = es[0].isIntersecting; bStart(); }).observe(hero);
+  document.addEventListener('visibilitychange', bStart);
+  bStart();
+
+  // ---------- header + section entrances ----------
+  const hd = document.getElementById('hd');
+  const onScroll = () => hd.classList.toggle('solid', scrollY > 40);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  if (!REDUCE && window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    const rv = gsap.utils.toArray('.rv');
+    gsap.set(rv, {opacity:0, y:28});
+    ScrollTrigger.batch(rv, {start:'top 88%',
+      onEnter: b => gsap.to(b, {opacity:1, y:0, duration:1, ease:'power3.out', stagger:.09, overwrite:true}),
+      onEnterBack: b => gsap.set(b, {opacity:1, y:0, overwrite:true})});
+    gsap.from('.hero-copy > *', {opacity:0, y:24, duration:1.1, ease:'power3.out', stagger:.1, delay:.2});
+    gsap.from('.scent', {opacity:0, y:20, duration:1, ease:'power3.out', delay:.6});
+  }
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const html = document.documentElement, hero = document.getElementById('top'), canvas = document.getElementById('gl');
+const { SCENTS, ptr, REDUCE, lowEnd } = window.NOKA;
+const lerp = (a, b, t) => a + (b - a) * t;
+
+try {
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setClearColor(0, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), .04).texture;
+  // fog in the background colour pushes the far petals back
+  scene.fog = new THREE.Fog(SCENTS.lavender.bgB, 12, 19);
+  const camera = new THREE.PerspectiveCamera(30, 1, .1, 60);
+  const key = new THREE.DirectionalLight('#FFF4E2', 1.7); key.position.set(4, 6, 8); scene.add(key);
+  const fill = new THREE.DirectionalLight('#E6EEF2', .5); fill.position.set(-6, 1, 4); scene.add(fill);
+
+  // ---------- the bottle (lathe body + label + pump) ----------
+  const rig = new THREE.Group(); scene.add(rig);
+  const inner = new THREE.Group(); rig.add(inner);
+  const prof = [[0,-1.62],[.78,-1.62],[.9,-1.57],[.95,-1.45],[.96,-1.22],[.96,1.04],[.93,1.27],[.83,1.44],[.62,1.57],[.43,1.64],[.41,1.74],[0,1.74]]
+    .map(([x, y]) => new THREE.Vector2(x, y));
+  const bodyMat = new THREE.MeshPhysicalMaterial({color:SCENTS.lavender.body, roughness:.3, clearcoat:1, clearcoatRoughness:.12, envMapIntensity:.9});
+  inner.add(new THREE.Mesh(new THREE.LatheGeometry(prof, 80), bodyMat));
+
+  const lc = document.createElement('canvas'); lc.width = 1024; lc.height = 712;
+  const lx = lc.getContext('2d');
+  const labelTex = new THREE.CanvasTexture(lc);
+  labelTex.colorSpace = THREE.SRGBColorSpace; labelTex.anisotropy = 8;
+  function drawLabel(S){
+    lx.fillStyle = '#F6F2E8'; lx.fillRect(0, 0, 1024, 712);
+    lx.strokeStyle = 'rgba(78,93,69,.5)'; lx.lineWidth = 3; lx.strokeRect(150, 46, 724, 620);
+    lx.textAlign = 'center'; lx.fillStyle = '#2F3A2B';
+    lx.letterSpacing = '10px'; lx.font = '500 34px "Cormorant Garamond", serif'; lx.fillText('BOTANICAL HAIR CARE', 512, 140);
+    lx.letterSpacing = '26px'; lx.font = '500 168px "Cormorant Garamond", serif'; lx.fillText('NOKA', 525, 320);
+    lx.letterSpacing = '0px';
+    // a small drawing of the scent's plant
+    lx.save(); lx.translate(512, 425);
+    if (S.kind === 'lav') {
+      lx.strokeStyle = '#7B8B6E'; lx.lineWidth = 3; lx.beginPath(); lx.moveTo(0, 46); lx.quadraticCurveTo(4, 0, 0, -50); lx.stroke();
+      lx.fillStyle = S.petal[0];
+      for (let i = 0; i < 7; i++) { const y = -46 + i * 11; [-1, 1].forEach(s => { lx.beginPath(); lx.ellipse(s * 8, y, 7, 4.5, s * .5, 0, 6.2832); lx.fill(); }); }
+    } else {
+      lx.fillStyle = S.petal[2]; lx.beginPath(); lx.arc(0, 0, 44, 0, 6.2832); lx.fill();
+      lx.fillStyle = '#F8EBC0'; lx.beginPath(); lx.arc(0, 0, 37, 0, 6.2832); lx.fill();
+      lx.strokeStyle = S.petal[2]; lx.lineWidth = 3;
+      for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; lx.beginPath(); lx.moveTo(0, 0); lx.lineTo(Math.cos(a) * 37, Math.sin(a) * 37); lx.stroke(); }
+    }
+    lx.restore();
+    lx.fillStyle = '#2F3A2B'; lx.font = 'italic 500 60px "Cormorant Garamond", serif'; lx.fillText(S.label, 512, 560);
+    lx.font = '400 30px "Zen Kaku Gothic New", sans-serif'; lx.fillStyle = '#4E5D45'; lx.fillText('シャンプー  400mL', 512, 622);
+    labelTex.needsUpdate = true;
+  }
+  drawLabel(SCENTS.lavender);
+  const label = new THREE.Mesh(new THREE.CylinderGeometry(.968, .968, 1.55, 64, 1, true, -1.15, 2.3),
+    new THREE.MeshStandardMaterial({map:labelTex, roughness:.75}));
+  label.position.y = -.12; inner.add(label);
+
+  const capMat = new THREE.MeshStandardMaterial({color:'#3B4636', roughness:.42});
+  const part = (geo, x, y, z, rz = 0) => { const m = new THREE.Mesh(geo, capMat); m.position.set(x, y, z); m.rotation.z = rz; inner.add(m); return m; };
+  part(new THREE.CylinderGeometry(.45, .46, .26, 48), 0, 1.86, 0);
+  part(new THREE.CylinderGeometry(.09, .09, .38, 20), 0, 2.15, 0);
+  part(new THREE.CylinderGeometry(.31, .33, .24, 40), 0, 2.42, 0);
+  part(new THREE.BoxGeometry(.8, .13, .2), .5, 2.47, 0);
+  part(new THREE.CylinderGeometry(.065, .065, .14, 16), .9, 2.43, 0);
+  inner.position.y = -.44;
+
+  // ghost copies trail behind the spin: a motion blur that only touches the bottle
+  const ghosts = [];
+  for (let i = 0; i < 3; i++) {
+    const g = inner.clone(true), mats = [];
+    g.traverse(o => { if (o.isMesh) { o.material = o.material.clone(); o.material.transparent = true; o.material.depthWrite = false; o.material.opacity = 0; mats.push(o.material); } });
+    rig.add(g); ghosts.push({g, mats, body:mats[0]});
+  }
+
+  // soft shadow under the bottle
+  const sc = document.createElement('canvas'); sc.width = sc.height = 128;
+  const sx = sc.getContext('2d'), sg = sx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  sg.addColorStop(0, 'rgba(47,58,43,.42)'); sg.addColorStop(1, 'rgba(47,58,43,0)');
+  sx.fillStyle = sg; sx.fillRect(0, 0, 128, 128);
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, .6), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sc), transparent:true, depthWrite:false, fog:false}));
+  scene.add(shadow);
+
+  // ---------- petals and herb leaves ----------
+  function bend(g, k){
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i); p.setZ(i, x * x * k + Math.sin(y * 2.2) * .06); }
+    g.computeVertexNormals(); g.center(); return g;
+  }
+  const lavS = new THREE.Shape(); lavS.moveTo(0, 0); lavS.bezierCurveTo(.2, .18, .2, .62, 0, .9); lavS.bezierCurveTo(-.2, .62, -.2, .18, 0, 0);
+  const citS = new THREE.Shape(); citS.moveTo(0, 0); citS.bezierCurveTo(.5, .12, .48, .72, .07, .82); citS.quadraticCurveTo(0, .74, -.07, .82); citS.bezierCurveTo(-.48, .72, -.5, .12, 0, 0);
+  const leafS = new THREE.Shape(); leafS.moveTo(0, 0); leafS.bezierCurveTo(.26, .25, .3, .8, 0, 1.3); leafS.bezierCurveTo(-.3, .8, -.26, .25, 0, 0);
+  const GEO = {lav:bend(new THREE.ShapeGeometry(lavS, 12), 1.4), cit:bend(new THREE.ShapeGeometry(citS, 12), 1.1), leaf:bend(new THREE.ShapeGeometry(leafS, 12), .9)};
+  const matCache = {};
+  const matFor = c => matCache[c] || (matCache[c] = new THREE.MeshPhysicalMaterial({color:c, roughness:.6, sheen:.6, sheenRoughness:.5, side:THREE.DoubleSide}));
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  let small = innerWidth <= 1100;
+  // phones get fewer floaters
+  const N = Math.round((innerWidth <= 760 ? 20 : 34) * (lowEnd ? .7 : 1));
+  const floaters = [];
+  function home(f){
+    // normalised spot on screen (y up); foreground pieces keep clear of the bottle and the headline
+    for (let k = 0; k < 40; k++) {
+      f.nx = Math.random() * 2 - 1; f.ny = Math.random() * 2 - 1;
+      const clear = small ? f.ny < .15 && !(Math.abs(f.nx) < .5 && f.ny > -.85)
+        : !(Math.abs(f.nx) < .24 && Math.abs(f.ny) < .78) && !(f.nx < -.3 && f.ny > -.55 && f.ny < .6);
+      if (!f.fg || clear) break;
+    }
+  }
+  function dress(f, S){
+    f.mesh.geometry = f.leaf ? GEO.leaf : GEO[S.kind];
+    f.mesh.material = matFor(pick(f.leaf ? S.leaf : S.petal));
+  }
+  for (let i = 0; i < N; i++) {
+    const fg = i % 5 < 2, leaf = i % 3 === 0;
+    const f = {fg, leaf, z: fg ? 1.2 + Math.random() * 2.2 : -4.5 + Math.random() * 3.2,
+      size: (fg ? .55 : .42) + Math.random() * (fg ? .35 : .28) * (leaf ? .8 : 1),
+      par: fg ? .7 : -.35, fs: .5 + Math.random() * .7, ph: Math.random() * 6.28,
+      rv: new THREE.Vector3((Math.random() - .5) * 1.2, (Math.random() - .5) * 1.2, (Math.random() - .5) * .8),
+      ox:0, oy:0, boost:1, suck:0, mesh:new THREE.Mesh()};
+    f.mesh.rotation.set(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28);
+    home(f); dress(f, SCENTS.lavender); scene.add(f.mesh); floaters.push(f);
+  }
+
+  // ---------- sizing ----------
+  let W = 1, H = 1;
+  function size(){
+    small = innerWidth <= 1100;
+    W = hero.clientWidth; H = hero.clientHeight;
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, innerWidth <= 760 ? 1.75 : 2));
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H;
+    camera.position.set(0, 0, small ? 14 : 12);
+    camera.updateProjectionMatrix();
+  }
+  size();
+  addEventListener('resize', () => { size(); if (REDUCE) update(0, 0); });
+
+  // ---------- per frame ----------
+  const P = {x:0, y:0}, SP = {v:0};
+  const v3 = new THREE.Vector3();
+  let lastSpin = 0;
+  function update(dt, t){
+    const still = REDUCE ? 0 : 1;
+    // the bottle leans slowly toward the cursor or finger
+    const a = REDUCE ? 0 : 1 - Math.pow(.96, dt * 60);
+    P.x = lerp(P.x, ptr.nx, a); P.y = lerp(P.y, ptr.ny, a);
+    const s = small ? (innerWidth <= 760 ? .74 : .82) : 1;
+    const by = (small ? -1.05 : -.12) + Math.sin(t * .8) * .08 * still;
+    rig.position.set(0, by, 0); rig.scale.setScalar(s);
+    rig.rotation.set(P.y * .2, 0, -P.x * .12 + .05);
+    const idle = Math.sin(t * .25) * .22 * still;
+    inner.rotation.y = idle + P.x * .7 + SP.v;
+    const vel = dt > 0 ? (SP.v - lastSpin) / dt : 0; lastSpin = SP.v;
+    ghosts.forEach((gh, i) => {
+      gh.g.rotation.y = inner.rotation.y - vel * .02 * (i + 1);
+      const op = Math.min(1, Math.abs(vel) / 14) * (.34 - i * .09);
+      gh.mats.forEach(m => { m.opacity = op; }); gh.g.visible = op > .01;
+    });
+    shadow.position.set(0, by - 2.08 * s, -.6); shadow.scale.setScalar(s * (1 - Math.sin(t * .8) * .04 * still));
+
+    const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), R = innerWidth <= 760 ? 150 : 230;
+    const b = a > 0 ? 1 - Math.pow(.9, dt * 60) : 0;
+    for (const f of floaters) {
+      const hh = tanH * (camera.position.z - f.z), hw = hh * camera.aspect;
+      let x = f.nx * hw * .95 + P.x * f.par, y = f.ny * hh * .9 - P.y * f.par * .6 + Math.sin(t * f.fs + f.ph) * .18 * still;
+      // pushed away by the pointer, measured on screen
+      let tx = 0, ty = 0, boost = 1;
+      if (ptr.on && !REDUCE) {
+        v3.set(x + f.ox, y + f.oy, f.z).project(camera);
+        const dx = (v3.x * .5 + .5) * W - ptr.px, dy = (-v3.y * .5 + .5) * H - ptr.py, d = Math.hypot(dx, dy) || 1;
+        if (d < R) { const k = (R - d) / R, w = 2 * hh / H * R * .6 * k; tx = dx / d * w; ty = -dy / d * w; boost = 1 + k * 5; }
+      }
+      f.ox = lerp(f.ox, tx, b); f.oy = lerp(f.oy, ty, b); f.boost = lerp(f.boost, boost, b * .8);
+      x += f.ox; y += f.oy;
+      // drawn into the bottle during a scent change
+      f.mesh.position.set(lerp(x, 0, f.suck), lerp(y, by, f.suck), lerp(f.z, 0, f.suck * .6));
+      f.mesh.scale.setScalar(f.size * (1 - .92 * f.suck));
+      f.mesh.rotation.x += f.rv.x * dt * f.boost; f.mesh.rotation.y += f.rv.y * dt * f.boost; f.mesh.rotation.z += f.rv.z * dt * f.boost;
+    }
+    renderer.render(scene, camera);
+  }
+
+  // ---------- scent change ----------
+  const fogTo = new THREE.Color();
+  function applyBottle(S){
+    bodyMat.color.set(S.body); ghosts.forEach(g => g.body.color.set(S.body));
+    drawLabel(S);
+  }
+  document.addEventListener('noka:scent', e => {
+    const S = SCENTS[e.detail];
+    fogTo.set(S.bgB);
+    if (REDUCE) {
+      scene.fog.color.copy(fogTo); applyBottle(S);
+      floaters.forEach(f => { home(f); dress(f, S); });
+      update(0, 0); return;
+    }
+    gsap.to(scene.fog.color, {r:fogTo.r, g:fogTo.g, b:fogTo.b, duration:1.4, ease:'power2.inOut'});
+    // spin up blurred, swap the colour at full speed, settle with a little overshoot
+    const base = SP.v;
+    gsap.timeline({onComplete:() => { SP.v = base; lastSpin = base; }})
+      .to(SP, {v:base + Math.PI * 2, duration:.6, ease:'power2.in', onComplete:() => applyBottle(S)})
+      .to(SP, {v:base + Math.PI * 4, duration:1.4, ease:'back.out(0.7)'});
+    floaters.forEach(f => {
+      const d = Math.random() * .12;
+      gsap.timeline()
+        .to(f, {suck:1, duration:.5, ease:'power2.in', delay:d, onComplete:() => { home(f); dress(f, S); f.ox = f.oy = 0; }})
+        .to(f, {suck:0, duration:.9, ease:'back.out(1.5)', delay:.3 - d});
+    });
+  });
+
+  // ---------- run only while the hero is on screen ----------
+  let on = true, running = false, last = 0;
+  function frame(now){
+    if (!on || document.hidden) { running = false; return; }
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    update(dt, now / 1000);
+    requestAnimationFrame(frame);
+  }
+  function start(){
+    if (REDUCE) { update(0, 0); return; }
+    if (!running && on) { running = true; last = performance.now(); requestAnimationFrame(frame); }
+  }
+  new IntersectionObserver(es => { on = es[0].isIntersecting; start(); }).observe(hero);
+  document.addEventListener('visibilitychange', start);
+
+  // label type needs its fonts; draw again once they arrive
+  Promise.race([Promise.all(['500 168px "Cormorant Garamond"', 'italic 500 60px "Cormorant Garamond"', '400 30px "Zen Kaku Gothic New"'].map(f => document.fonts.load(f))),
+    new Promise(r => setTimeout(r, 3000))]).then(() => { drawLabel(SCENTS[window.NOKA.scent]); if (REDUCE) update(0, 0); });
+
+  start();
+  html.classList.remove('no-gl'); html.classList.add('gl');
+} catch (err) {
+  html.classList.add('no-gl');
+}
+</script>
+</body>
+</html>
