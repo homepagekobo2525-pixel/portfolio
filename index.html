@@ -47,6 +47,11 @@
   .preview .bar i{width:9px;height:9px;border-radius:50%;background:#cfcfca}
   .preview iframe{position:absolute;top:26px;left:0;width:1280px;height:900px;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
   .preview .fallback{position:absolute;inset:26px 0 0;display:grid;place-items:center;color:#fff;font-weight:900;font-size:1.4rem;letter-spacing:.1em}
+  .work.wide{grid-column:1/-1;}
+  .work.wide .preview{aspect-ratio:21/8;}
+  .fallback.soyogi{color:#ECE6DA;background:radial-gradient(ellipse at 62% 45%,#2C2A25,#0D0D0C 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+  .fallback.soyogi span{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:.32em;}
+  .fallback.soyogi small{font-size:.9rem;font-weight:500;letter-spacing:.2em;color:#C9A55E;}
   .work-body{padding:26px 28px 28px;display:flex;flex-direction:column;flex:1}
   .cat{font-size:.75rem;font-weight:700;color:var(--accent)}
   .work h3{font-size:1.25rem;font-weight:900;margin:4px 0 10px;line-height:1.5}
@@ -116,6 +121,18 @@
     <div class="wrap">
       <div class="sec-title"><h2>Works</h2><span>制作サンプル</span></div>
       <div class="work-grid">
+
+        <a class="work wide" href="3d/" target="_blank" rel="noopener">
+          <!-- no live iframe here: the 3D page would run WebGL inside the list -->
+          <div class="preview" style="--pc:#0D0D0C"><div class="bar"><i></i><i></i><i></i></div><div class="fallback soyogi"><span>SOYOGI</span><small>風を、仕立てる。</small></div></div>
+          <div class="work-body">
+            <span class="cat">プレミアム表現サンプル</span>
+            <h3>SOYOGI｜3Dで組み上がる製品ページ</h3>
+            <p>架空のサロン専売ヘアドライヤーを題材にした、Appleの製品ページのような1ページサイト。スクロールに合わせて、宙に浮いた部品が回転しながら組み上がります。カラーを選ぶと3Dモデルの色がその場で変わります。スマホや動きを減らす設定の端末にも対応しています。</p>
+            <div class="tags"><span>Three.js</span><span>GSAP ScrollTrigger</span><span>3Dカラー切替</span><span>スマホ・低モーション対応</span></div>
+            <span class="view">サイトを見る</span>
+          </div>
+        </a>
 
         <a class="work" href="salon/" target="_blank" rel="noopener">
           <div class="preview" style="--pc:#8a9a7e"><div class="bar"><i></i><i></i><i></i></div><div class="fallback">森時間</div><iframe src="salon/" loading="lazy" tabindex="-1" title="森時間のプレビュー"></iframe></div>
