@@ -764,7 +764,9 @@ try{
   filter.mo=[-2.05,-.45];shellBottom.mo=[-.25,-.62];handle.mo=[1.95,-.45];
   // each part's own centre when assembled, so it can be placed by its middle
   const box=new THREE.Box3();
-  for(const p of parts){box.setFromObject(p.g);p.c=box.getCenter(new THREE.Vector3()).sub(inner.position);}
+  model.updateMatrixWorld(true);
+  // lc: the same centre in the part's own space, so a label can follow the part wherever it actually is
+  for(const p of parts){box.setFromObject(p.g);const w=box.getCenter(new THREE.Vector3());p.lc=p.g.worldToLocal(w.clone());p.c=w.sub(inner.position);}
   const invQ=new THREE.Quaternion(), tv=new THREE.Vector3(), rc=new THREE.Vector3();
 
   // exploded view: parts slide apart along the barrel and away from it
@@ -945,7 +947,7 @@ try{
     if(lo>0||xls[0].el.style.opacity!=='0'){
       model.updateMatrixWorld();
       for(const x of xls){
-        lv.copy(x.p.c);lv.x+=x.p.ex.x*exX*ex;lv.y+=x.p.ex.y*exY*ex;inner.localToWorld(lv);lv.project(camera);
+        lv.copy(x.p.lc);x.p.g.localToWorld(lv);lv.project(camera);
         const sx=(lv.x*.5+.5)*W;
         x.el.style.opacity=lo;
         x.el.style.transform=`translate(${sx}px,${(-lv.y*.5+.5)*H}px)`;
